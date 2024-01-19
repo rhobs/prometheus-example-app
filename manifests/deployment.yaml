@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: prometheus-example-app
-        image: ghcr.io/rhobs/prometheus-example-app:0.3.0
+        image: ghcr.io/rhobs/prometheus-example-app:latest
         ports:
         - name: web
           containerPort: 8080

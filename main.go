@@ -12,6 +12,8 @@ import (
 	"golang.org/x/net/http2/h2c"
 )
 
+const foundHandlerName = "found"
+
 var (
 	appVersion string
 	version    = prometheus.NewGauge(prometheus.GaugeOpts{
@@ -47,6 +49,11 @@ func main() {
 	r.MustRegister(httpRequestDuration)
 	r.MustRegister(version)
 
+	// Initialize the most likely labels.
+	httpRequestDuration.WithLabelValues("200", foundHandlerName, "get")
+	httpRequestsTotal.WithLabelValues("200", "get")
+	httpRequestsTotal.WithLabelValues("404", "get")
+
 	foundHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello from example application."))
@@ -56,7 +63,7 @@ func main() {
 	})
 
 	foundChain := promhttp.InstrumentHandlerDuration(
-		httpRequestDuration.MustCurryWith(prometheus.Labels{"handler": "found"}),
+		httpRequestDuration.MustCurryWith(prometheus.Labels{"handler": foundHandlerName}),
 		promhttp.InstrumentHandlerCounter(httpRequestsTotal, foundHandler),
 	)
 

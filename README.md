@@ -4,7 +4,7 @@ This example app serves as an example of how one can easily instrument HTTP hand
 
 Usage is simple, on any request to `/` the request will result in a `200` response code. This increments the counter for this response code. Similarly the `/err` endpoint will result in a `404` response code, therefore increments that respective counter. Duration metrics are also exposed for any request to `/`.
 
-A Docker image is available at: `ghcr.io/rhobs/prometheus-example-app:0.3.0`
+A Docker image is available at: `ghcr.io/rhobs/prometheus-example-app`
 
 ## Deploying in a Kubernetes cluster
 
@@ -33,7 +33,7 @@ The following metrics are exposed:
 
 The sample output of the `/metric` endpoint after 5 incoming HTTP requests shown below.
 
-Note: with no initial incoming request, only `version` metric is reported.
+Note: In addition to `version`, the other metrics are initialized with the most likely labels.
 
 ```
 # HELP http_request_duration_seconds Duration of all HTTP requests

@@ -1,4 +1,4 @@
-FROM golang:1.17 AS builder
+FROM golang:1.21 AS builder
 
 WORKDIR /go/src/github.com/rhobs/prometheus-example-app
 COPY . /go/src/github.com/rhobs/prometheus-example-app

@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -55,10 +56,12 @@ func main() {
 	httpRequestsTotal.WithLabelValues("404", "get")
 
 	foundHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Received request:", r.Method, r.URL.Path)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello from example application."))
 	})
 	notfoundHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Received request:", r.Method, r.URL.Path)
 		w.WriteHeader(http.StatusNotFound)
 	})
 

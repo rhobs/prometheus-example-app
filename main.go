@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -33,6 +34,11 @@ var (
 		Name: "http_request_duration_seconds",
 		Help: "Duration of all HTTP requests",
 	}, []string{"code", "handler", "method"})
+
+	httpRequestsTotalOtel = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "http.server.requests",
+		Help: "Count of HTTP requests per HTTP method (following the OpenTelemetry semantic conventions)",
+	}, []string{"http.request.method"})
 )
 
 func main() {
@@ -47,14 +53,17 @@ func main() {
 	r := prometheus.NewRegistry()
 	r.MustRegister(httpRequestsTotal)
 	r.MustRegister(httpRequestDuration)
+	r.MustRegister(httpRequestsTotalOtel)
 	r.MustRegister(version)
 
 	// Initialize the most likely labels.
 	httpRequestDuration.WithLabelValues("200", foundHandlerName, "get")
+	httpRequestsTotalOtel.WithLabelValues("get")
 	httpRequestsTotal.WithLabelValues("200", "get")
 	httpRequestsTotal.WithLabelValues("404", "get")
 
 	foundHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		httpRequestsTotalOtel.WithLabelValues(strings.ToLower(r.Method)).Inc()
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello from example application."))
 	})

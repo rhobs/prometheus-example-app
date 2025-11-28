@@ -1,4 +1,5 @@
-VERSION:=$(shell cat VERSION)
+# Use the git tag name if at a tagged commit, otherwise use the short commit hash
+VERSION:=$(shell git describe --tags --exact-match --match "v*" 2>/dev/null || git rev-parse --short HEAD)
 
 IMAGE_NAME ?= prometheus-example-app
 

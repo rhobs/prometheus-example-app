@@ -6,6 +6,10 @@ Usage is simple, on any request to `/` the request will result in a `200` respon
 
 A Docker image is available at: `ghcr.io/rhobs/prometheus-example-app`
 
+# Releasing
+
+Cut a new `vX.Y.Z` tag and publish a release based on that tag. 
+
 ## Deploying in a Kubernetes cluster
 
 First, deploy one instance of this example application, which listens and exposes metrics on port 8080 using the following [Deployment manifest](manifests/deployment.yaml).
